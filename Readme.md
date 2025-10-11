@@ -20,3 +20,36 @@ Fully functional backend in NODE, EXPRESS & Mongoose
         }));
 
         If User.find() fails, the error automatically goes to your error handler — no manual try catch needed.
+
+
+# src/controllers
+
+    registerUser.controller.js	
+    Handles signup — hashes password, sets role to "user", and returns JWT tokens.
+
+    loginUser.controller.js	
+    Verifies email/password, returns new tokens and user info, and saves refresh token in DB.
+
+    logoutUser.controller.js
+    Logs out by deleting refresh token and clearing cookies (for both users and admins).
+
+    generateAccessAndRefreshToken.controller.js	
+    Creates new JWT tokens; ensures session continuity when one expires.
+
+    refreshAccessToken.js	
+    Refreshes access token silently using refresh token (auto-relogin mechanism).
+
+    user.controller.js	
+    Handles user dashboard actions update profile, get quiz list, etc. (auth-protected).
+
+    createQuiz.controller.js	
+    Admin-only — add, edit, or delete quiz questions.
+
+    submitQuiz.controller.js	
+    Handles quiz submission — auto-checks answers and saves score.
+
+    getQuiz.controller.js	
+    Sends quiz questions to user without correct answers (to prevent cheating).
+
+    manageUsers.controller.js	
+    Admin-only — manage users, reset quiz attempts, or update roles.
