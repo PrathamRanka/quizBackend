@@ -1,1 +1,1 @@
-export const DB_NAME = "OWASP QUIZ"
+export const DB_NAME = "OWASP-QUIZ"

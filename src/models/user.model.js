@@ -56,7 +56,7 @@ const userSchema = new Schema(
             _id: this._id,
             email: this.email,
             fullName: this.fullName,
-            role: this.role, // 👈 include role for admin validation
+            role: this.role,
             },
             process.env.ACCESS_TOKEN_SECRET,
             { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
