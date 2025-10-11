@@ -1,5 +1,6 @@
 import mongoose, {schema} from "mongoose";
 
+import { questions } from "./questions.model";
 const answerSchema = new Schema ({
   
 

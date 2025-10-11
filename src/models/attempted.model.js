@@ -1,4 +1,7 @@
 import mongoose, {schema} from "mongoose";
+import { User } from "./user.model.js";
+import { Quiz } from "./quiz.model.js";
+
 const attemptedSchema = new Schema ({
     userId: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
     quizId: {type: mongoose.Schema.Types.ObjectId, ref: "Quiz"},
