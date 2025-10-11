@@ -1,7 +1,7 @@
-import mongoose, {schema} from "mongoose";
+import mongoose, {Schema} from "mongoose";
 
 import { questions } from "./questions.model";
-const answerSchema = new Schema ({
+export const answerSchema = new Schema ({
   
 
    questionId: {type: mongoose.Schema.Types.ObjectId, ref: "questions"},
@@ -11,4 +11,3 @@ const answerSchema = new Schema ({
    timeSpentSec: {type: Number, required: true, default: 0},
 }, {timestamps: true}
 )
-export const answers = mongoose.model("answers",answerSchema);
