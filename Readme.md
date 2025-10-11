@@ -1,7 +1,9 @@
 # QUIZ - Portal Backend
+Fully functional backend in NODE, EXPRESS & Mongoose
 
 
 # UTILS 
+    Few Files and their Usage
     -ApiError.js 
     Creates structured error objects for cleaner error responses and easier debugging.
     eg: if (!user) throw new ApiError(404, "User not found");
@@ -16,5 +18,5 @@
         const users = await User.find();
         res.json(users);
         }));
-        
+
         If User.find() fails, the error automatically goes to your error handler — no manual try catch needed.
