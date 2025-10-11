@@ -41,11 +41,9 @@ import { ApiError } from "../utils/ApiError";
 res.status(200).json(
   new ApiResponse(200, {
     accessToken,
-    user: {
-      id: user._id,
-      fullName: user.fullName,
+    user: {      
       email: user.email,
-      role: user.role,
+      password: user.password
     },
   }, "Logged in successfully")
 );
