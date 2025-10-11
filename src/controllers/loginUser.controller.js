@@ -13,7 +13,7 @@ import { User } from "../models/user.model";
 import { ApiError } from "../utils/ApiError";
 
 
-  const user = await User.findOne({
+  export const loginUser = await User.findOne({
     $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }]
   });
 
