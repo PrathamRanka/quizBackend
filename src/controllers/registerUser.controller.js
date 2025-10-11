@@ -11,7 +11,9 @@ export const registerUser = asyncHandler(async (req, res) => {
   }
 
   const existingUser = await User.findOne({ email });
-  if (existingUser) throw new ApiError(400, "Email is already registered");
+  if (existingUser) {
+    throw new ApiError(400, "Email is already registered");
+  }
 
   const user = await User.create({
     fullName,

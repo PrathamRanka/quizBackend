@@ -21,6 +21,17 @@ import { ApiError } from "../utils/ApiError";
     throw new ApiError(401, "Invalid credentials");
   }
 
+  //admin access
+    if (user.role === "admin") 
+    {
+  redirectTo = "/admin";
+  } 
+  else 
+    {
+  redirectTo = "/login";
+  }
+
+
   // Check password
   const isMatch = await user.comparePassword(password); // assuming user model has this method
   if (!isMatch) {
@@ -43,7 +54,7 @@ res.status(200).json(
     accessToken,
     user: {      
       email: user.email,
-      password: user.password
+      password: user.password 
     },
   }, "Logged in successfully")
 );

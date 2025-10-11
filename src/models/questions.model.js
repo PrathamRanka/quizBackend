@@ -1,26 +1,23 @@
-import mongoose, {schema} from "mongoose";
-const OptionSchema = new mongoose.Schema({
-    
-    id: {type: String, required: true},
-    optionText: {type: String, required: true},
-    isCorrect: {type: Boolean, required: true},
-}, {_id: false});
+import mongoose, { Schema } from "mongoose";
 
+// Sub-schema for options
+const OptionSchema = new Schema({
+  id: { type: String, required: true },
+  optionText: { type: String, required: true },
+  isCorrect: { type: Boolean, required: true },
+}, { _id: false });
 
-const questionSchema = new Schema ({
-quizId: {type: mongoose.Schema.Types.ObjectId, ref: "Quiz"},
+const questionSchema = new Schema({
+  quizId: { type: Schema.Types.ObjectId, ref: "Quiz", required: true },
+  sessionId: { type: String, required: true },
+  questionText: { type: String, required: true },
+  position: { type: Number, required: true },
+  marks: { type: Number, required: true, default: 0 },
+  metadata: {
+    imageUrl: { type: String },
+    shuffleOptions: { type: Boolean, default: false },
+  },
+  options: { type: [OptionSchema], default: [] }, // structured options
+}, { timestamps: true });
 
- sessionId: {type:string, required:true},
-questionText: {type: String, required: true},
-options: [{type: String, required: true}],
-marks: {type: Number, required: true, default: 0},
-position : {type: Number, required: true},
-metadata : { 
-    imageUrl : {type: String},
-shuffleOptions: {type: Boolean, default: false}
-},
-isCorrect: {type: Boolean, default: false},
-  options: { type: [OptionSchema], default: [] }
-}, {timestamps: true});
-
-export const questions = mongoose.model("questions",questionSchema);
+export const Questions = mongoose.model("Questions", questionSchema);
