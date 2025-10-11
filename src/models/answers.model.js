@@ -1,4 +1,4 @@
-import mongoose, {schema} from "mongoose";
+import mongoose, {Schema} from "mongoose";
 
 import { questions } from "./questions.model";
 const answerSchema = new Schema ({
