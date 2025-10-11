@@ -19,6 +19,7 @@ metadata : {
     imageUrl : {type: String},
 shuffleOptions: {type: Boolean, default: false}
 },
+isCorrect: {type: Boolean, default: false},
   options: { type: [OptionSchema], default: [] }
 }, {timestamps: true});
 
