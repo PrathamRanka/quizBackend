@@ -24,6 +24,7 @@ app.use(cookieParser())
     import logoutRoute from "./routes/logout.routes.js";
     import saveAnswerRoute from "./routes/saveAnswer.routes.js";
     import submitRoute from "./routes/submit.routes.js";
+    import adminRoutes from "./routes/admin.routes.js";
 
     // routes declaration
 
@@ -33,5 +34,6 @@ app.use(cookieParser())
     app.use("/owasp-quiz/", instructionsRoute);
     app.use("/owasp-quiz/", saveAnswerRoute);
     app.use("/owasp-quiz/", submitRoute);
+    app.use("/api/admin", adminRoutes);
 
     export {app}
