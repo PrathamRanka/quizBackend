@@ -1,10 +1,11 @@
 import express from "express";
-import { verifyJWT } from "../middleware/auth.middleware.js";
-import { startQuiz } from "../controllers/quizController.js";
-
-const router = express.Router();
+import { showInstructions } from "../controllers/instruction.controller.js";
+import { verifyJWT} from "../middlewares/verifyJWT.js";
 
 
+const router  = express.Router();
+
+router.post("/instructions", verifyJWT, showInstructions);
 router.post("/start", verifyJWT, startQuiz);
 
 export default router;

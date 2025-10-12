@@ -11,7 +11,8 @@ const sessionSchema = new Schema({
   submitted: { type: Boolean, default: false },
   warningCount: { type: Number, default: 0 },
   disqualified: { type: Boolean, default: false },
-  status: { type: String, enum: ["in_progress", "submitted", "disqualified"], default: "in_progress" }
+  status: { type: String, enum: ["in_progress", "submitted", "disqualified"], default: "in_progress" },
+  hasViewedInstructions: { type: Boolean, default: false } 
 }, { timestamps: true });
 
 export const Session = mongoose.model("Session", sessionSchema);

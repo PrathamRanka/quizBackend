@@ -16,15 +16,19 @@ app.use(express.urlencoded({extended: true, limit: "16kb"}))
 app.use(express.static("public"))
 app.use(cookieParser())
 
-// routes import
-// import route from "./"
-import signUpRoute from "./routes/signup.routes.js";
-import loginRoute from "./routes/login.routes.js";
-import logoutRoute from "./routes/logout.routes.js";
-// routes declaration
-//app.use("/v1....", routeName)
-app.use("/owasp-quiz/auth", signUpRoute);
-app.use("/owasp-quiz/auth", loginRoute);
-app.use("/owasp-quiz/auth", logoutRoute);
+    // routes import
 
-export {app}
+    import signUpRoute from "./routes/signup.routes.js";
+    import loginRoute from "./routes/login.routes.js";
+    import instructions from "./routes/quiz.routes.js";
+    import logoutRoute from "./routes/logout.routes.js";
+
+    // routes declaration
+
+    app.use("/owasp-quiz/auth", signUpRoute);
+    app.use("/owasp-quiz/auth", loginRoute);
+    app.use("/owasp-quiz/auth", logoutRoute);
+    app.use("/owasp-quiz/", instructions);
+
+
+    export {app}
