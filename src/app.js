@@ -23,6 +23,7 @@ app.use(cookieParser())
     import instructionsRoute from "./routes/quiz.routes.js";
     import logoutRoute from "./routes/logout.routes.js";
     import saveAnswerRoute from "./routes/saveAnswer.routes.js";
+    import submitRoute from "./routes/submit.routes.js";
 
     // routes declaration
 
@@ -31,5 +32,6 @@ app.use(cookieParser())
     app.use("/owasp-quiz/auth", logoutRoute);
     app.use("/owasp-quiz/", instructionsRoute);
     app.use("/owasp-quiz/", saveAnswerRoute);
+    app.use("/owasp-quiz/", submitRoute);
 
     export {app}

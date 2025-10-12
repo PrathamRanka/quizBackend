@@ -6,7 +6,8 @@ import { Session } from "../models/session.model.js";
 // Controller: saveAnswer
  const saveAnswer = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const { sessionId, questionId, selectedOption, timeSpentSec } = req.body;
+  const { sessionId } = req.params;
+  const { questionId, selectedOption, timeSpentSec } = req.body;
 
   // 1. Validate required fields
   if (!sessionId || !questionId || selectedOption === undefined || timeSpentSec === undefined) {

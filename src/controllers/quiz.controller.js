@@ -7,7 +7,7 @@ import { Questions } from "../models/questions.model.js";
 // Controller: startQuiz
 const startQuiz = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const { quizId } = req.body;
+  const { quizId } = req.params;
 
   // 1. Validate input
   if (!quizId) {

@@ -6,6 +6,6 @@ import { verifyJWT} from "../middlewares/verifyJWT.js";
 const router  = express.Router();
 
 router.post("/instructions", verifyJWT, showInstructions);
-router.post("/start", verifyJWT, startQuiz);
+router.post("/quizzes/:quizId/start", verifyJWT, startQuiz);
 
 export default router;

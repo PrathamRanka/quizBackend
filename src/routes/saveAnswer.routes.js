@@ -3,6 +3,6 @@ import { saveAnswer } from "../controllers/saveAnswers.controller.js";
 
 const router = express.Router();
 
-router.post("/save-answer", saveAnswer);
+router.post("/sessions/:sessionId/answers", saveAnswer);
 
 export default router;
