@@ -18,9 +18,13 @@ app.use(cookieParser())
 
 // routes import
 // import route from "./"
-
+import signUpRoute from "./routes/signup.routes.js";
+import loginRoute from "./routes/login.routes.js";
+import logoutRoute from "./routes/logout.routes.js";
 // routes declaration
 //app.use("/v1....", routeName)
-
+app.use("/owasp-quiz/auth", signUpRoute);
+app.use("/owasp-quiz/auth", loginRoute);
+app.use("/owasp-quiz/auth", logoutRoute);
 
 export {app}

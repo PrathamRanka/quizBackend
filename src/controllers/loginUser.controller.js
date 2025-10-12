@@ -7,57 +7,73 @@
     //send cookie
 
 
-import { generateAccessAndRefreshToken } from "./generateAccessAndRefreshToken.controller";
-import jwt from "jsonwebtoken"
-import { User } from "../models/user.model";
-import { ApiError } from "../utils/ApiError";
+import { generateAccessAndRefreshToken } from "./generateAccessAndRefreshToken.controller.js";
+import { User } from "../models/user.model.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
+const loginUser = async (req, res) => {
+  try {
+    const { usernameOrEmail, email, password } = req.body;
+    const identifier = usernameOrEmail || email;
 
-  export const loginUser = await User.findOne({
-    $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }]
-  });
+    console.log("Login request body:", req.body);
+    console.log("Identifier:", identifier);
 
-  if (!user) {
-    throw new ApiError(401, "Invalid credentials");
+    if (!identifier || !password) {
+      throw new ApiError(400, "Email/username and password are required");
+    }
+
+    const user = await User.findOne({
+      $or: [{ username: identifier }, { email: identifier }],
+    });
+
+    // console.log("User found:", user ? "✅ Yes" : "❌ No");
+
+    if (!user) {
+      throw new ApiError(401, "Invalid credentials (user not found)");
+    }
+
+    const isMatch = await user.isPasswordCorrect(password);
+    // console.log("Password match:", isMatch ? "✅ Yes" : "❌ No");
+
+    if (!isMatch) {
+      throw new ApiError(401, "Invalid credentials (wrong password)");
+    }
+
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
+
+    // console.log("Tokens generated ✅");
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(200).json(
+      new ApiResponse(
+        200,
+        {
+          accessToken,
+          user: {
+            id: user._id,
+            email: user.email,
+            fullName: user.fullName,
+            role: user.role,
+          },
+        },
+        "Logged in successfully"
+      )
+    );
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
   }
-
-  //admin access
-    if (user.role === "admin") 
-    {
-  redirectTo = "/admin";
-  } 
-  else 
-    {
-  redirectTo = "/login";
-  }
-
-
-  // Check password
-  const isMatch = await user.comparePassword(password); // assuming user model has this method
-  if (!isMatch) {
-    throw new ApiError(401, "Invalid credentials");
-  }
-
-  // Generate access and refresh tokens
-  const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
-
-  // Send refresh token as httpOnly cookie
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "Strict",
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-  });
-
-res.status(200).json(
-  new ApiResponse(200, {
-    accessToken,
-    user: {      
-      email: user.email,
-      password: user.password 
-    },
-  }, "Logged in successfully")
-);
-
-
+};
+export { loginUser };
 
