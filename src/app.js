@@ -20,7 +20,7 @@ app.use(cookieParser())
 
     import signUpRoute from "./routes/signup.routes.js";
     import loginRoute from "./routes/login.routes.js";
-    import instructionsRoute from "./routes/quiz.routes.js";
+    import instructionsRoute  from "./routes/instructions.routes.js";
     import logoutRoute from "./routes/logout.routes.js";
     import saveAnswerRoute from "./routes/saveAnswer.routes.js";
     import submitRoute from "./routes/submit.routes.js";

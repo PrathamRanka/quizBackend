@@ -1,4 +1,4 @@
-import { Session } from "../models/session.model.js";
+import { Session } from "../models/attempted.model.js";
 import { Questions } from "../models/questions.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";

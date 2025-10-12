@@ -1,7 +1,7 @@
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { Session } from "../models/session.model.js";
+import { Session } from "../models/attempted.model.js";
 
 // Controller: saveAnswer
  const saveAnswer = asyncHandler(async (req, res) => {

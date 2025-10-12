@@ -1,7 +1,7 @@
 import express from "express";
 import { showInstructions } from "../controllers/instruction.controller.js";
-import { verifyJWT} from "../middlewares/verifyJWT.js";
-
+import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { startQuiz } from "../controllers/quiz.controller.js";
 
 const router  = express.Router();
 
