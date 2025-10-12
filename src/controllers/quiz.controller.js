@@ -26,7 +26,7 @@ const startQuiz = asyncHandler(async (req, res) => {
   }
 
   // 4. Fetch all questions for the quiz
-  const questions = await Questions.find({ quizId }).sort({ position: 1 });
+  const questions = await Questions.find({ quizId }).sort({ position: 1 }).select('-options.isCorrect'); // Exclude correct answers to dev tools
 
   if (!questions || questions.length === 0) {
     throw new ApiError(404, "No questions found for this quiz.");
