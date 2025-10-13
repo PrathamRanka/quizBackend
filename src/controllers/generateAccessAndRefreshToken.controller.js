@@ -1,10 +1,7 @@
 import { User } from "../models/user.model.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
-import jwt from "jsonwebtoken"; 
-import mongoose from "mongoose";
 
-//
+
 const generateAccessAndRefreshToken = async (userId) => {
   try {
     const user = await User.findById(userId);

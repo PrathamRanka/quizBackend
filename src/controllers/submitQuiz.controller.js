@@ -22,13 +22,13 @@ const submitQuiz = asyncHandler(async (req, res) => {
     throw new ApiError(403, "You have been disqualified");
   }
 
-  //  Fetch all questions for this quiz
+ 
   const questions = await Questions.find({ quizId: session.quizId });
   if (!questions || questions.length === 0) {
     throw new ApiError(404, "No questions found for this quiz");
   }
 
-  //  Calculate score
+  
   let totalScore = 0;
 
   questions.forEach((q) => {
