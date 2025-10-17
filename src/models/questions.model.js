@@ -9,7 +9,7 @@ const OptionSchema = new Schema({
 
 const questionSchema = new Schema({
   quizId: { type: Schema.Types.ObjectId, ref: "Quiz", required: true },
-  sessionId: { type: String, required: true },
+  // 'sessionId' has been removed to avoid data duplication.
   questionText: { type: String, required: true },
   position: { type: Number, required: true },
   marks: { type: Number, required: true, default: 0 },
@@ -17,7 +17,7 @@ const questionSchema = new Schema({
     imageUrl: { type: String },
     shuffleOptions: { type: Boolean, default: false },
   },
-  options: { type: [OptionSchema], default: [] }, // structured options
+  options: { type: [OptionSchema], default: [] },
 }, { timestamps: true });
 
 export const Questions = mongoose.model("Questions", questionSchema);
