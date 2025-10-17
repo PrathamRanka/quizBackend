@@ -30,6 +30,12 @@ const userSchema = new Schema(
       enum: ["user", "admin"], 
       default: "user",
     },
+    phoneNumber: {
+      type: String,
+      required: [true, "Phone number is required"],
+      unique: true,
+      trim: true,
+    },
     refreshToken: {
       type: String, 
     },

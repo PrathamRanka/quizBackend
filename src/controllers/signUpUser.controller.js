@@ -4,10 +4,10 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
  const signUpUser = asyncHandler(async (req, res) => {
-  const { fullName, email, password, rollNumber, role } = req.body;
+  const { fullName, email, password, rollNumber, role, phoneNumber } = req.body;
 
-  if (!fullName || !email || !password || !rollNumber) {
-    throw new ApiError(400, "Full name, email, password, and roll number are required");
+  if (!fullName || !email || !password || !rollNumber || !phoneNumber) {
+    throw new ApiError(400, "Full name, email, password, roll number, and phone number are required");
   }
 
   const existingUser = await User.findOne({ email });
