@@ -4,67 +4,77 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
-const submitQuiz = asyncHandler(async (req, res) => {
-  const userId = req.user._id;
-  const { sessionId } = req.params;
+export const submitQuiz = asyncHandler(async (req, res) => {
+    
+    const { sessionId } = req.params;
+    const { answers } = req.body;
 
-  // Fetch session
-  const session = await Session.findOne({ _id: sessionId, userId });
-  if (!session) {
-    throw new ApiError(404, "Session not found");
-  }
-
-  //  Check if already submitted or disqualified
-  if (session.status === "submitted") {
-    throw new ApiError(400, "Quiz already submitted");
-  }
-  if (session.status === "disqualified") {
-    throw new ApiError(403, "You have been disqualified");
-  }
-
- 
-  const questions = await Questions.find({ quizId: session.quizId });
-  if (!questions || questions.length === 0) {
-    throw new ApiError(404, "No questions found for this quiz");
-  }
-
-  
-  let totalScore = 0;
-
-  questions.forEach((q) => {
-    const userAnswer = session.answers.find(
-      (a) => a.questionId.toString() === q._id.toString()
-    );
-
-    if (userAnswer) {
-      // Find correct option
-      const correctOption = q.options.find((o) => o.isCorrect);
-      if (correctOption && userAnswer.selectedOption === correctOption.id) {
-        totalScore += q.marks;
-      }
+    // --- VALIDATION ---
+    if (!answers || !Array.isArray(answers) || answers.length === 0) {
+        throw new ApiError(400, "A valid array of answers is required for submission.");
     }
-  });
 
-  //  Update session
-  session.completedAt = new Date();
-  session.score = totalScore;
-  session.status = "submitted";
+    const session = await Session.findOne({ _id: sessionId, userId: req.user._id });
+    if (!session) {
+        throw new ApiError(404, "Session not found for this user.");
+    }
+    if (session.status === "submitted" || session.status === "completed") {
+        throw new ApiError(400, "This quiz has already been submitted.");
+    }
+    if (session.status === "disqualified") {
+        throw new ApiError(403, "You have been disqualified from this quiz.");
+    }
 
-  await session.save();
+    // --- SECURE SCORING ---
+    const questions = await Questions.find({ quizId: session.quizId }).select("options marks");
+    if (!questions || questions.length === 0) {
+        throw new ApiError(404, "No questions found for this quiz.");
+    }
 
-  //  Return result to frontend
-  return res.status(200).json(
-    new ApiResponse(
-      200,
-      {
-        sessionId: session._id,
-        score: session.score,
-        completedAt: session.completedAt,
-        status: session.status,
-      },
-      "Quiz submitted successfully"
-    )
-  );
+    let totalScore = 0;
+
+    const processedAnswers = answers.map(userAnswer => {
+        const question = questions.find(
+            (q) => q._id.toString() === userAnswer.questionId
+        );
+
+        if (!question) {
+            return { ...userAnswer, isCorrect: false, correctAnswer: null };
+        }
+
+        const correctOption = question.options.find((o) => o.isCorrect);
+        const isUserCorrect = correctOption && userAnswer.selectedOption === correctOption.optionText;
+
+        if (isUserCorrect) {
+            totalScore += question.marks || 1;
+        }
+
+        return {
+            questionId: userAnswer.questionId,
+            selectedOption: userAnswer.selectedOption,
+            isCorrect: isUserCorrect,
+            correctAnswer: correctOption ? correctOption.optionText : null,
+        };
+    });
+
+    // --- SAVE FINAL RESULTS ---
+    session.completedAt = new Date();
+    session.score = totalScore;
+    session.status = "submitted"; 
+    session.answers = processedAnswers; 
+
+    await session.save();
+
+    // --- RESPOND TO FRONTEND ---
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            {
+                sessionId: session._id,
+                score: session.score,
+                results: session.answers, 
+            },
+            "Quiz submitted successfully"
+        )
+    );
 });
-
-export { submitQuiz };
