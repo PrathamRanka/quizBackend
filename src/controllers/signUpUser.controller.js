@@ -10,9 +10,9 @@ import { ApiResponse } from "../utils/ApiResponse.js";
     throw new ApiError(400, "Full name, email, password, roll number, and phone number are required");
   }
 
-  const existingUser = await User.findOne({ email });
+  const existingUser = await User.findOne({ email }, { rollNumber }, {phoneNumber });
   if (existingUser) {
-    throw new ApiError(400, "Email is already registered");
+    throw new ApiError(400, "A user with this email, roll number, or phone number already exists.");
   }
 
   const user = await User.create({
@@ -20,6 +20,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
     email,
     password,
     rollNumber,
+    phoneNumber,
     role: role || "user",
   });
 
