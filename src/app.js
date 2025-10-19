@@ -7,12 +7,24 @@ dotenv.config({
     path: './.env'
 });
 
-const app = express()
+    const app = express()
+
+    const allowedOrigins = process.env.CORS_ORIGIN.split(",");
 
 app.use(cors({
-    origin: process.env.CORS_ORIGIN,
-    credentials: true
-}))
+  origin: function (origin, callback) {
+    
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+}));
+
 
 app.use(express.json({limit: "16kb"}))
 app.use(express.urlencoded({extended: true, limit: "16kb"}))
@@ -27,21 +39,19 @@ app.use(cookieParser())
     import startQuizRoute from "./routes/startQuiz.route.js";
     import logoutRoute from "./routes/logout.routes.js";
     import statusRoute from "./routes/status.routes.js";
-
-    // import saveAnswerRoute from "./routes/saveAnswer.routes.js";
     import submitRoute from "./routes/submit.routes.js";
     import adminRoutes from "./routes/admin.routes.js";
+    import exportDataRoutes from "./routes/exportData.routes.js";
 
     // routes declaration
-
     app.use("/owasp-quiz/auth", signUpRoute);
     app.use("/owasp-quiz/auth", loginRoute);
     app.use("/owasp-quiz/", instructionsRoute);
     app.use("/owasp-quiz/", startQuizRoute);
     app.use("/owasp-quiz", statusRoute);
-    // app.use("/owasp-quiz/", saveAnswerRoute);
     app.use("/owasp-quiz/", submitRoute);
     app.use("/owasp-quiz/auth", logoutRoute);
     app.use("/owasp-quiz/admin", adminRoutes);
+    app.use("/owasp-quiz/admin", exportDataRoutes);
 
     export {app}
