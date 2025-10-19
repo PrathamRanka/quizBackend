@@ -12,8 +12,8 @@ const signUpUser = asyncHandler(async (req, res) => {
   }
 
   // Added specific validation rules
-  if (!rollNumber.startsWith('1025') || rollNumber.length !== 10 || !/^\d+$/.test(rollNumber)) {
-    throw new ApiError(400, 'Invalid Roll Number. It must start with "1025" and be 10 digits long.');
+  if (!rollNumber.startsWith('1025') && !rollNumber.startsWith('1024') || rollNumber.length !== 10 || !/^\d+$/.test(rollNumber)) {
+    throw new ApiError(400, 'Invalid Roll Number. It must start with "1025" or "1024" and be 10 digits long.');
   }
   if (!email.endsWith('@thapar.edu')) {
     throw new ApiError(400, 'Invalid Email. You must use a "@thapar.edu" email address.');
