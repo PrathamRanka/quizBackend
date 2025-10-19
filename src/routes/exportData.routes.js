@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { exportResultsAsCsv } from "../controllers/exportData.controller";
+import { exportResultsAsCsv } from "../controllers/exportData.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { verifyAdmin } from "../middlewares/verifyAdmin.middleware.js";
 const router = Router();
