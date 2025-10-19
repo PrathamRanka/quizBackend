@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import jwt from "jsonwebtoken"; 
 import bcrypt from "bcrypt";
+import { Session } from "./attempted.model.js"
 
 const userSchema = new Schema(
   {
@@ -42,6 +43,18 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 );
+
+userSchema.pre('deleteOne', { document: true, query: false }, async function(next) {
+  try {
+    console.log(`User ${this._id} is being deleted. Deleting associated sessions...`);
+    await Session.deleteMany({ userId: this._id });
+    console.log(`Successfully deleted sessions for user ${this._id}.`);
+    next();
+  } catch (error) {
+    console.error(`Error during cascading delete for user ${this._id}:`, error);
+    next(error);
+  }
+});
 
 //  Hash password before saving
         userSchema.pre("save", async function (next) {
