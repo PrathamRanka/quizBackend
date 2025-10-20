@@ -10,20 +10,19 @@ export const logoutUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "No refresh token found");
   }
 
-  
-  const user = await User.findOne({ refreshToken });
-  if (user) {
-    user.refreshToken = null; // Remove refresh token from DB
-    await user.save();
-  }
+  await User.findOneAndUpdate(
+    { refreshToken },
+    { $unset: { refreshToken: 1 } }
+  );
 
-  
-  res.clearCookie("refreshToken", {
+  // --- THIS IS THE FIX ---
+  const cookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "Strict",
-  });
+    secure: true, 
+    sameSite: "None", 
+  };
 
-  const response = new ApiResponse(200, null, "Logged out successfully");
-  res.status(response.statusCode).json(response);
+  res.clearCookie("refreshToken", cookieOptions);
+
+  return res.status(200).json(new ApiResponse(200, {}, "Logged out successfully"));
 });

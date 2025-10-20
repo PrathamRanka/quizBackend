@@ -13,14 +13,12 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 
 const loginUser = async (req, res) => {
   try {
-    // The field from the frontend could be 'email' or 'rollNumber'
     const { identifier, password } = req.body;
 
     if (!identifier || !password) {
-      throw new ApiError(400, "Identifier (email or roll number) and password are required");
+      throw new ApiError(400, "Identifier and password are required");
     }
 
-    // Find the user by either email or rollNumber
     const user = await User.findOne({
       $or: [{ email: identifier }, { rollNumber: identifier }],
     });
@@ -36,12 +34,15 @@ const loginUser = async (req, res) => {
 
     const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
 
-    res.cookie("refreshToken", refreshToken, {
+    // --- THIS IS THE FIX ---
+    const cookieOptions = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
+      secure: true, // Required for cross-domain cookies
+      sameSite: "None", // Allow the cookie to be sent from your Vercel frontend
       maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    };
+
+    res.cookie("refreshToken", refreshToken, cookieOptions);
 
     return res.status(200).json(
       new ApiResponse(
