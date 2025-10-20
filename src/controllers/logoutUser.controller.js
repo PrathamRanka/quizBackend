@@ -12,7 +12,8 @@ export const logoutUser = asyncHandler(async (req, res) => {
 
   await User.findOneAndUpdate(
     { refreshToken },
-    { $unset: { refreshToken: 1 } }
+    { $unset: { refreshToken: 1 } },
+    { new: true }
   );
 
   // --- THIS IS THE FIX ---
@@ -21,7 +22,7 @@ export const logoutUser = asyncHandler(async (req, res) => {
     secure: true, 
     sameSite: "None", 
   };
-
+  res.clearCookie("accessToken", cookieOptions);
   res.clearCookie("refreshToken", cookieOptions);
 
   return res.status(200).json(new ApiResponse(200, {}, "Logged out successfully"));
