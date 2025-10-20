@@ -12,14 +12,14 @@ const signUpUser = asyncHandler(async (req, res) => {
   }
 
   // Added specific validation rules
-  if (!rollNumber.startsWith('1025') && !rollNumber.startsWith('1024') || rollNumber.length !== 10 || !/^\d+$/.test(rollNumber)) {
-    throw new ApiError(400, 'Invalid Roll Number. It must start with "1025" or "1024" and be 10 digits long.');
+  if (!rollNumber.startsWith('1025') || rollNumber.length !== 10 || !/^\d+$/.test(rollNumber)) {
+    throw new ApiError(400, 'Invalid Roll Number. It must start with "1025" and be 10 digits long.');
   }
-  if (!email.endsWith('@thapar.edu')) {
-    throw new ApiError(400, 'Invalid Email. You must use a "@thapar.edu" email address.');
+  if (!email.endsWith('_be25@thapar.edu')) {
+    throw new ApiError(400, 'Invalid Email. You must use a "_be25@thapar.edu" email address.');
   }
-  if (phoneNumber.length !== 10 || !/^\d+$/.test(phoneNumber)) {
-    throw new ApiError(400, 'Invalid Phone Number. It must be exactly 10 digits.');
+  if (phoneNumber.length !== 10 || !/^[6-9]\d{9}$/.test(phoneNumber)) {
+    throw new ApiError(400, 'Invalid Phone Number. It must be exactly 10 digits and start with 6, 7, 8, or 9.');
   }
   if (password.length < 6) {
     throw new ApiError(400, 'Password must be at least 6 characters long.');
