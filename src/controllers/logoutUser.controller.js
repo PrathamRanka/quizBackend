@@ -4,26 +4,26 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 export const logoutUser = asyncHandler(async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
 
-  if (!refreshToken) {
-    throw new ApiError(400, "No refresh token found");
+  const { refreshToken } = req.cookies;
+
+  if (refreshToken) {
+    await User.findOneAndUpdate(
+      { refreshToken },
+      { $unset: { refreshToken: 1 } }, 
+      { new: true }
+    );
   }
 
-  await User.findOneAndUpdate(
-    { refreshToken },
-    { $unset: { refreshToken: 1 } },
-    { new: true }
-  );
-
-  // --- THIS IS THE FIX ---
   const cookieOptions = {
     httpOnly: true,
-    secure: true, 
+    secure: true,   
     sameSite: "None", 
   };
   res.clearCookie("accessToken", cookieOptions);
   res.clearCookie("refreshToken", cookieOptions);
 
-  return res.status(200).json(new ApiResponse(200, {}, "Logged out successfully"));
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Logged out successfully"));
 });
