@@ -5,7 +5,7 @@ const sessionSchema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   quizId: { type: Schema.Types.ObjectId, ref: "Quiz", required: true },
   answers: { type: [answerSchema], default: [] },
-  completedAt: { type: Date },
+  // completedAt: { type: Date },
   score: { type: Number, default: 0 },
   submitted: { type: Boolean, default: false },
   warningCount: { type: Number, default: 0 },
